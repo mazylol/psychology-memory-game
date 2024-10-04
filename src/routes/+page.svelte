@@ -27,7 +27,15 @@
 		</div>
 	{:else}
 		<div class="flex h-screen flex-col items-center justify-center">
-			<h1 class="text-4xl font-bold text-neutral-900">Welcome to the game!</h1>
+			<h1 class="text-4xl font-bold text-neutral-900">
+				<span class="text-blue-500">Visual</span> <span class="text-yellow-500">VS</span>
+				<span class="text-red-500">Auditory</span>
+			</h1>
+			<p class="mt-4 max-w-3xl text-lg text-neutral-700">
+				The game will start with flashing a series of numbers and you will have to input what they
+				were in under 10 seconds. You will go until you fail. The second part of the game will be
+				the same thing but you will be listening to the number as well.
+			</p>
 			<input
 				type="text"
 				class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
@@ -42,7 +50,13 @@
 			/>
 			<button
 				class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
-				on:click={() => (state.gameStarted = true)}>Start</button
+				on:click={() => {
+					if (!state.name || !state.age) {
+						alert('Please fill in your name and age');
+						return;
+					}
+					state.gameStarted = true;
+				}}>Start</button
 			>
 		</div>
 	{/if}
