@@ -8,15 +8,34 @@
 		round: 0,
 		results: {
 			roundOne: {
-				score: 0,
-				answerTimes: []
+				score: 0
 			},
 			roundTwo: {
-				score: 0,
-				answerTimes: []
+				score: 0
 			}
 		}
 	};
+
+	async function sendState() {
+		try {
+			const response = await fetch('/api/state', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(state)
+			});
+
+			const result = await response.json();
+			if (result.success) {
+				console.log('State successfully inserted!');
+			} else {
+				console.error('Failed to insert state:', result.error);
+			}
+		} catch (error) {
+			console.error('Error sending state:', error);
+		}
+	}
 </script>
 
 <main class="min-h-screen bg-neutral-300">

@@ -9,12 +9,10 @@ export type State = {
 	results: {
 		roundOne: {
 			score: number;
-			answerTimes: number[];
 		};
 
 		roundTwo: {
 			score: number;
-			answerTimes: number[];
 		};
 	};
 };
