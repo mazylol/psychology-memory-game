@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { State } from '$lib/state';
+	import RoundOne from '../components/RoundOne.svelte';
+	import RoundTwo from '../components/RoundTwo.svelte';
 
 	let state: State = {
 		name: '',
 		age: undefined,
-		gameStarted: false,
+		gameStarted: true,
 		round: 0,
 		results: {
 			roundOne: {
@@ -40,10 +42,12 @@
 
 <main class="min-h-screen bg-neutral-300">
 	{#if state.gameStarted}
-		<div class="flex h-screen flex-col items-center justify-center">
-			<h1 class="text-4xl font-bold text-neutral-900">Game started!</h1>
-			<p class="mt-4 text-lg text-neutral-700">This is the game page</p>
-		</div>
+		{#if state.round === 0}
+			<RoundOne bind:state />
+		{/if}
+		{#if state.round === 1}
+			<RoundTwo bind:state />
+		{/if}
 	{:else}
 		<div class="flex h-screen flex-col items-center justify-center">
 			<h1 class="text-4xl font-bold text-neutral-900">
