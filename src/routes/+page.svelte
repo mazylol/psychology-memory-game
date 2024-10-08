@@ -165,6 +165,7 @@
 						on:click={() => {
 							gameState.round = 0;
 							gameState.gameStarted = false;
+							dbState = [];
 						}}>Back</button
 					>
 				{:else}
