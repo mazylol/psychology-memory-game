@@ -1,4 +1,4 @@
-export type State = {
+export type GameState = {
 	name: string;
 	age: number | undefined;
 
@@ -15,4 +15,13 @@ export type State = {
 			score: number;
 		};
 	};
+};
+
+export type DBState = {
+	id: number | undefined;
+	name: string | undefined;
+	age: number | undefined;
+
+	roundOneScore: number | undefined;
+	roundTwoScore: number | undefined;
 };

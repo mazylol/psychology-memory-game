@@ -5,10 +5,12 @@ import { eq } from 'drizzle-orm';
 
 export async function GET() {
 	try {
-		const people = await db.select().from(state);
-		return json(people);
+		const people = await db.select().from(state).run();
+		// Return a success field along with the data
+		return json({ success: true, data: people });
 	} catch (error) {
 		console.error('Error fetching state:', error);
+		// Return an error response with the correct structure
 		return json({ success: false, error: 'Failed to fetch state' }, { status: 500 });
 	}
 }

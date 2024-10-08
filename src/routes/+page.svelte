@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { State } from '$lib/state';
+	import type { DBState, GameState } from '$lib/state';
 	import RoundOne from '../components/RoundOne.svelte';
 	import RoundTwo from '../components/RoundTwo.svelte';
 
-	let state: State = {
+	let gameState: GameState = {
 		name: '',
 		age: undefined,
 		gameStarted: false,
-		round: 1,
+		round: 0,
 		results: {
 			roundOne: {
 				score: 0
@@ -18,6 +18,8 @@
 		}
 	};
 
+	let dbState: DBState[] = [];
+
 	async function sendState() {
 		try {
 			const response = await fetch('/api/state', {
@@ -25,7 +27,7 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify(state)
+				body: JSON.stringify(gameState)
 			});
 
 			const result = await response.json();
@@ -41,11 +43,29 @@
 
 	async function getState() {
 		try {
-			const response = await fetch('/api/state');
+			const response = await fetch('/api/state', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
 			const result = await response.json();
 
 			if (result.success) {
-				return result.state;
+				console.log('State successfully retrieved:', result.data.rows);
+
+				let rows = result.data.rows;
+
+				for (let i = 0; i < rows.length; i++) {
+					dbState.push({
+						id: rows[i][0],
+						name: rows[i][1],
+						age: rows[i][2],
+						roundOneScore: rows[i][3],
+						roundTwoScore: rows[i][4]
+					});
+				}
 			} else {
 				console.error('Failed to get state:', result.error);
 			}
@@ -56,12 +76,70 @@
 </script>
 
 <main class="min-h-screen bg-neutral-300">
-	{#if state.gameStarted}
-		{#if state.round === 0}
-			<RoundOne bind:state />
+	{#if gameState.gameStarted}
+		{#if gameState.round === 0}
+			<RoundOne bind:state={gameState} />
 		{/if}
-		{#if state.round === 1}
-			<RoundTwo bind:state />
+		{#if gameState.round === 1}
+			<RoundTwo bind:state={gameState} />
+		{/if}
+		{#if gameState.round === 2}
+			<div class="flex h-screen flex-col items-center justify-center">
+				<h1 class="text-4xl font-bold text-neutral-900">
+					<span class="text-blue-500">Auditory</span>
+					<span class="text-red-500">Deceit</span>
+				</h1>
+				<p class="mt-4 max-w-3xl text-lg text-neutral-700">
+					Thank you for playing the game! Your results are as follows:
+				</p>
+				<p class="mt-4 max-w-3xl text-lg text-neutral-700">
+					Round 1: {gameState.results.roundOne.score}
+				</p>
+				<p class="mt-4 max-w-3xl text-lg text-neutral-700">
+					Round 2: {gameState.results.roundTwo.score}
+				</p>
+				<button
+					class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
+					on:click={() => {
+						sendState();
+						gameState.round = 0;
+						gameState.gameStarted = false;
+					}}>Submit</button
+				>
+			</div>
+		{/if}
+		{#if gameState.round === 3}
+			<div class="flex flex-col items-center justify-center pt-16">
+				<h1 class="text-4xl font-bold text-neutral-900">
+					<span class="text-blue-500">Auditory</span>
+					<span class="text-red-500">Deceit</span>
+					<span class="text-yellow-500">Leaderboard</span>
+				</h1>
+				{#if dbState.length > 0}
+					<table class="mt-4 border border-neutral-500">
+						<thead>
+							<tr>
+								<th class="border border-neutral-500">Name</th>
+								<th class="border border-neutral-500">Age</th>
+								<th class="border border-neutral-500">Round 1 Score</th>
+								<th class="border border-neutral-500">Round 2 Score</th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each dbState as state}
+								<tr>
+									<td class="border border-neutral-500">{state.name}</td>
+									<td class="border border-neutral-500">{state.age}</td>
+									<td class="border border-neutral-500">{state.roundOneScore}</td>
+									<td class="border border-neutral-500">{state.roundTwoScore}</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				{:else}
+					<p class="mt-4 max-w-3xl text-lg text-neutral-700">No results found.</p>
+				{/if}
+			</div>
 		{/if}
 	{:else}
 		<div class="flex h-screen flex-col items-center justify-center">
@@ -69,7 +147,14 @@
 				<span class="text-blue-500">Auditory</span>
 				<span class="text-red-500">Deceit</span>
 			</h1>
-			<p>{getState}</p>
+			<button
+				class="mt-4 rounded-lg bg-yellow-500 p-1"
+				on:click={async () => {
+					await getState();
+					gameState.gameStarted = true;
+					gameState.round = 3;
+				}}>Leaderboard</button
+			>
 			<p class="mt-4 max-w-3xl text-lg text-neutral-700">
 				The game will start with flashing a series of numbers and you will have to input what they
 				were in under 10 seconds. You will go until you fail. The second part of the game will be
@@ -79,22 +164,22 @@
 				type="text"
 				class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
 				placeholder="Name (First and Last)"
-				bind:value={state.name}
+				bind:value={gameState.name}
 			/>
 			<input
 				type="number"
 				class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
 				placeholder="Age"
-				bind:value={state.age}
+				bind:value={gameState.age}
 			/>
 			<button
 				class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
 				on:click={() => {
-					if (!state.name || !state.age) {
+					if (!gameState.name || !gameState.age) {
 						alert('Please fill in your name and age');
 						return;
 					}
-					state.gameStarted = true;
+					gameState.gameStarted = true;
 				}}>Start</button
 			>
 		</div>

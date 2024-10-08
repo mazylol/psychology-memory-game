@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { randomInt } from '$lib/numbers';
-	import type { State } from '$lib/state';
+	import type { GameState } from '$lib/state';
 	import { onMount } from 'svelte';
 
-	export let state: State;
+	export let state: GameState;
 
 	let numbers: number[] = [];
-	numbers[0] = randomInt(1, 9);
+	let currentNumber = randomInt(1, 9);
+	numbers[0] = currentNumber;
 
 	let showingNumber = false;
 	let numberInput: string;
@@ -28,9 +29,7 @@
 
 <div class="flex h-screen items-center justify-center">
 	{#if showingNumber}
-		{#each numbers as number}
-			<div class="text-6xl font-bold text-blue-500">{number}</div>
-		{/each}
+		<div class="text-6xl font-bold text-blue-500">{currentNumber}</div>
 	{:else}
 		<form>
 			<input
@@ -60,7 +59,8 @@
 					}
 
 					// add a new number
-					numbers.push(randomInt(1, 9));
+					currentNumber = randomInt(1, 9);
+					numbers.push(currentNumber);
 
 					// clear the input
 					numberInput = '';
