@@ -45,7 +45,7 @@
 			const result = await response.json();
 
 			if (result.success) {
-				state = result.state;
+				return result.state;
 			} else {
 				console.error('Failed to get state:', result.error);
 			}
@@ -69,6 +69,7 @@
 				<span class="text-blue-500">Auditory</span>
 				<span class="text-red-500">Deceit</span>
 			</h1>
+			<p>{getState}</p>
 			<p class="mt-4 max-w-3xl text-lg text-neutral-700">
 				The game will start with flashing a series of numbers and you will have to input what they
 				were in under 10 seconds. You will go until you fail. The second part of the game will be
