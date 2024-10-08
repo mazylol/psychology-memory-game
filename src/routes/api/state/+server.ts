@@ -3,6 +3,16 @@ import { state } from '$lib/server/schema';
 import { json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
+export async function GET() {
+	try {
+		const people = await db.select().from(state);
+		return json(people);
+	} catch (error) {
+		console.error('Error fetching state:', error);
+		return json({ success: false, error: 'Failed to fetch state' }, { status: 500 });
+	}
+}
+
 export async function POST({ request }) {
 	try {
 		const data: any = await request.json();

@@ -6,8 +6,8 @@
 	let state: State = {
 		name: '',
 		age: undefined,
-		gameStarted: true,
-		round: 0,
+		gameStarted: false,
+		round: 1,
 		results: {
 			roundOne: {
 				score: 0
@@ -36,6 +36,21 @@
 			}
 		} catch (error) {
 			console.error('Error sending state:', error);
+		}
+	}
+
+	async function getState() {
+		try {
+			const response = await fetch('/api/state');
+			const result = await response.json();
+
+			if (result.success) {
+				state = result.state;
+			} else {
+				console.error('Failed to get state:', result.error);
+			}
+		} catch (error) {
+			console.error('Error getting state:', error);
 		}
 	}
 </script>
