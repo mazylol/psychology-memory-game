@@ -80,10 +80,27 @@
 		{#if gameState.round === 0}
 			<RoundOne bind:state={gameState} />
 		{/if}
-		{#if gameState.round === 1}
-			<RoundTwo bind:state={gameState} />
+		{#if gameState.round == 1}
+			<div class="flex h-screen flex-col items-center justify-center">
+				<h1 class="text-4xl font-bold text-neutral-900">
+					<span class="text-blue-500">Auditory</span>
+					<span class="text-red-500">Deceit</span>
+				</h1>
+				<p class="mt-4 max-w-3xl text-lg text-neutral-700">
+					You have failed the first round. You will now be taken to the second round.
+				</p>
+				<button
+					class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
+					on:click={() => {
+						gameState.round += 1;
+					}}>Start Round 2</button
+				>
+			</div>
 		{/if}
 		{#if gameState.round === 2}
+			<RoundTwo bind:state={gameState} />
+		{/if}
+		{#if gameState.round === 3}
 			<div class="flex h-screen flex-col items-center justify-center">
 				<h1 class="text-4xl font-bold text-neutral-900">
 					<span class="text-blue-500">Auditory</span>
@@ -106,9 +123,16 @@
 						gameState.gameStarted = false;
 					}}>Submit</button
 				>
+				<button
+					class="mt-4 rounded-lg bg-yellow-500 p-1"
+					on:click={() => {
+						gameState.round = 0;
+						gameState.gameStarted = false;
+					}}>Home</button
+				>
 			</div>
 		{/if}
-		{#if gameState.round === 3}
+		{#if gameState.round === 4}
 			<div class="flex flex-col items-center justify-center pt-16">
 				<h1 class="text-4xl font-bold text-neutral-900">
 					<span class="text-blue-500">Auditory</span>
@@ -136,6 +160,13 @@
 							{/each}
 						</tbody>
 					</table>
+					<button
+						class="mt-4 rounded-lg bg-yellow-500 p-1"
+						on:click={() => {
+							gameState.round = 0;
+							gameState.gameStarted = false;
+						}}>Back</button
+					>
 				{:else}
 					<p class="mt-4 max-w-3xl text-lg text-neutral-700">No results found.</p>
 				{/if}
@@ -152,7 +183,7 @@
 				on:click={async () => {
 					await getState();
 					gameState.gameStarted = true;
-					gameState.round = 3;
+					gameState.round = 4;
 				}}>Leaderboard</button
 			>
 			<p class="mt-4 max-w-3xl text-lg text-neutral-700">
