@@ -28,7 +28,12 @@
 	function showNumber() {
 		showingNumber = true;
 
-		soundMap.get(randomInt(1, 9)).play();
+		let random = randomInt(1, 9);
+		while (random === currentNumber) {
+			random = randomInt(1, 9);
+		}
+
+		soundMap.get(random).play();
 
 		setTimeout(() => {
 			showingNumber = false;
@@ -48,6 +53,7 @@
 		<form>
 			<input
 				type="text"
+				autofocus
 				bind:value={numberInput}
 				class="rounded-md border border-neutral-500 px-4 py-2"
 			/>

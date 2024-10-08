@@ -117,10 +117,12 @@
 				</p>
 				<button
 					class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
-					on:click={() => {
-						sendState();
+					on:click={async () => {
+						await sendState();
 						gameState.round = 0;
 						gameState.gameStarted = false;
+						gameState.results.roundOne.score = 0;
+						gameState.results.roundTwo.score = 0;
 					}}>Submit</button
 				>
 				<button
@@ -128,6 +130,8 @@
 					on:click={() => {
 						gameState.round = 0;
 						gameState.gameStarted = false;
+						gameState.results.roundOne.score = 0;
+						gameState.results.roundTwo.score = 0;
 					}}>Home</button
 				>
 			</div>
@@ -192,28 +196,30 @@
 				were in under 10 seconds. You will go until you fail. The second part of the game will be
 				the same thing but random, false numbers will be played to you.
 			</p>
-			<input
-				type="text"
-				class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
-				placeholder="Name (First and Last)"
-				bind:value={gameState.name}
-			/>
-			<input
-				type="number"
-				class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
-				placeholder="Age"
-				bind:value={gameState.age}
-			/>
-			<button
-				class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
-				on:click={() => {
-					if (!gameState.name || !gameState.age) {
-						alert('Please fill in your name and age');
-						return;
-					}
-					gameState.gameStarted = true;
-				}}>Start</button
-			>
+			<form class="flex flex-col">
+				<input
+					type="text"
+					class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
+					placeholder="Name (First and Last)"
+					bind:value={gameState.name}
+				/>
+				<input
+					type="number"
+					class="mt-4 rounded-md border border-neutral-500 px-4 py-2"
+					placeholder="Age"
+					bind:value={gameState.age}
+				/>
+				<button
+					class="bg-primary-500 mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
+					on:click={() => {
+						if (!gameState.name || !gameState.age) {
+							alert('Please fill in your name and age');
+							return;
+						}
+						gameState.gameStarted = true;
+					}}>Start</button
+				>
+			</form>
 		</div>
 	{/if}
 </main>

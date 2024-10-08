@@ -12,8 +12,6 @@
 	let showingNumber = false;
 	let numberInput: string;
 
-	let score = 0;
-
 	function showNumber() {
 		showingNumber = true;
 		setTimeout(() => {
@@ -34,6 +32,7 @@
 		<form>
 			<input
 				type="text"
+				autofocus
 				bind:value={numberInput}
 				class="rounded-md border border-neutral-500 px-4 py-2"
 			/>
@@ -46,14 +45,12 @@
 					// validate each number
 					for (let i = 0; i < numbers.length; i++) {
 						if (numberArray[i] !== numbers[i]) {
-							state.results.roundOne.score = score;
-
 							state.round += 1;
 
 							break;
 						} else {
 							if (i === numbers.length - 1) {
-								score += 1;
+								state.results.roundOne.score += 1;
 							}
 						}
 					}
