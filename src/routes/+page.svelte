@@ -193,8 +193,8 @@
 			>
 			<p class="mt-4 max-w-3xl text-lg text-neutral-700">
 				The game will start with flashing a series of numbers and you will have to input what they
-				were in under 10 seconds. You will go until you fail. The second part of the game will be
-				the same thing but random, false numbers will be played to you.
+				were. You will go until you fail. The second part of the game will be
+				the same thing but random, false numbers will be audibly played to you.
 			</p>
 			<form class="flex flex-col">
 				<input
