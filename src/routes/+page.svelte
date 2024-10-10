@@ -187,7 +187,7 @@
 				class="mt-4 rounded-lg bg-yellow-500 p-1"
 				on:click={async () => {
 					await getState();
-					dbState.sort((a, b) => b.roundTwoScore - a.roundTwoScore);
+					dbState.sort((a, b) => (b.roundTwoScore ?? 0) - (a.roundOneScore ?? 0));
 					gameState.gameStarted = true;
 					gameState.round = 4;
 				}}>Leaderboard</button
